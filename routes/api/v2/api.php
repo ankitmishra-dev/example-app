@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Product1\Cat;
 
 Route::get('/user', function (Request $request) {
     return $request->user();

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Products;
 
 use App\Models\Products\Product;
@@ -36,29 +37,28 @@ class ProductSyncService
 
                 $newProduct = Product::create([
                     'bigcomm_prod_id' => $product['id'],
-                    'name'            => $product['sku'] ?? null,
-                    'sku'             => $product['sku'] ?? null,
-                    'slug'            => $product['slug'] ?? null,
-                    'is_active'       => $product['is_active'] ?? 0,
-                    'price'           => $product['price'] ?? null,
-                    'description'     => $product['description'] ?? null,
-                    'category_id'     => null, // as in the documnet it is not asked
+                    'name' => $product['sku'] ?? null,
+                    'sku' => $product['sku'] ?? null,
+                    'slug' => $product['slug'] ?? null,
+                    'is_active' => $product['is_active'] ?? 0,
+                    'price' => $product['price'] ?? null,
+                    'description' => $product['description'] ?? null,
+                    'category_id' => null, // as in the documnet it is not asked
 
                 ]);
 
-
                 $saasResponse = Http::withoutVerifying()->asJson()->acceptJson()->withToken(config('big-comm.saas.api_token'))->post(self::SAAS_ENDPOINT, [
-                    'sku'         => $product['sku'] ?? null,
-                    'name'        => $product['name'] ?? null,
-                    'slug'        => $product['slug'] ?? null,
+                    'sku' => $product['sku'] ?? null,
+                    'name' => $product['name'] ?? null,
+                    'slug' => $product['slug'] ?? null,
                     'description' => $product['description'] ?? null,
-                    'is_active'   => true,
-                    'price'       => $product['price'] ?? null,
+                    'is_active' => true,
+                    'price' => $product['price'] ?? null,
                     'category_id' => 0,
                 ]);
 
                 if ($saasResponse->failed()) {
-                    Log::error('Saas API Failed for Product ID: ' . $product['id']);
+                    Log::error('Saas API Failed for Product ID: '.$product['id']);
                 }
             }
 
@@ -68,7 +68,7 @@ class ProductSyncService
 
         } catch (Throwable $e) {
             DB::rollBack();
-            Log::error('Transaction failed: ' . $e->getMessage());
+            Log::error('Transaction failed: '.$e->getMessage());
 
             return response()->json(['error' => 'Sync failed. Transaction rolled back.'], 500);
         }
